@@ -20,7 +20,7 @@ char password[] = "yourpassword"; // your network key
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOTtoken, client);
 
-int Bot_mtbs = 1000; //mean time between scan messages
+int Bot_mtbs = 100000; //mean time between scan messages
 long Bot_lasttime;   //last time messages' scan has been done
 bool b_lastThreshold = false;
 
@@ -66,27 +66,20 @@ void loop() {
     Serial.println(b_thresholdReached);
     Serial.println(i_moistureValue);
 
-//    // echo function of bot
-//    while(numNewMessages) {
-//      Serial.println("got response");
-//      for (int i=0; i<numNewMessages; i++) {
-//        bot.sendMessage(bot.messages[i].chat_id, bot.messages[i].text, "");
-//      }
-//      numNewMessages = bot.getUpdates(bot.last_message_received + 1);
-//    }
-
     while(b_lastThreshold != b_thresholdReached)
-    Serial.println("Moisture has changed!");
-    if(b_thresholdReached == true)
     {
-       bot.sendMessage(ChatID,"Flower X needs water!", "");
+      Serial.println("Moisture has changed!");
+      if(b_thresholdReached == true)
+      {
+         bot.sendMessage(ChatID,"Flower X needs water!", "");
+      }
+      else
+      {
+         bot.sendMessage(ChatID, "Flower X: Thank you !", "");
+      }
+
+      b_lastThreshold = b_thresholdReached;
+      Bot_lasttime = millis();
     }
-    else
-    {
-       bot.sendMessage(ChatID, "Flower X: Thank you !", "");
-    }
-    
-    b_lastThreshold = b_thresholdReached;
-    Bot_lasttime = millis();
   }
 }
