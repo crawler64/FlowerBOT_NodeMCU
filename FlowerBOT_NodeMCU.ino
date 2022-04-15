@@ -65,7 +65,7 @@ bool manualwateringFlag = false;
 #define WATERLEVELPIN 12
 #define WATERING_TIME 3000
 #define HOSTNAME "FlowerRobot_ESP8266"
-#define MOISTURE_VALUE 30
+#define MOISTURE_VALUE 45
 #define DELAY_TIME_WATERING 1200000
 #define TZ_SETTING 7200
   // Set offset time in seconds to adjust for your timezone, for example:
@@ -158,13 +158,9 @@ void handlePostForms() {
 }
 
 void handlePump() {
-  const String temp = "<html>\
-  <body>\
-    { 'status': 'pump activated' } \
-  </body> \
-  </html>";
+  const String temp = "{'status':'pump activated'}";
   
-  server.send(200, "text/html", temp);
+  server.send(200, "application/json", temp);
   manualwateringFlag = true;
 }
 
@@ -396,7 +392,8 @@ void Pump(bool onoff)
 
 void checkWatering(){
       uWaterTimeCurrent = millis();
-      if (hours == checkHourTime && minutes > 0 && (moist_value_percent < MOISTURE_VALUE) && !wateringFlag && (uWaterTimeCurrent - uWaterTimePrev > DELAY_TIME_WATERING || manualwateringFlag)) {
+      if (hours == checkHourTime && minutes > 0 && (moist_value_percent < MOISTURE_VALUE) && !wateringFlag && (uWaterTimeCurrent - uWaterTimePrev > DELAY_TIME_WATERING) || manualwateringFlag) {
+          manualwateringFlag = false;
           wateringFlag = true;
           uWaterTimePrev = millis();
           bot.sendMessage(CHAT_ID, "FlowerBot started Watering", "");
@@ -405,9 +402,9 @@ void checkWatering(){
     } else if ((uWaterTimeCurrent - uWaterTimePrev > WATERING_TIME) && wateringFlag) {
       // reset Flag
       wateringFlag = false;
-      manualwateringFlag = false;
       uWaterTimePrev = uWaterTimeCurrent;
       Pump(false);
+      manualwateringFlag = false;
       bot.sendMessage(CHAT_ID, "FlowerBot stopped Watering", "");
     }
     if (hours == checkHourTime && minutes == 0 && (abs(uWaterTimeCurrent - uWaterLevelPrev) > 61000) && !waterlevelflag)
