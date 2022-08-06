@@ -113,28 +113,27 @@ int value = 0;
 
 // WebServer
 void handleRoot() {
-  char temp[500];
-  snprintf(temp, 500,
+  char temp[700];
+  snprintf(temp, 700,
 
   "<html>\
   <head>\
-  <meta http-equiv='refresh' content='5'/>\
+  <meta name='viewport' content='width=device-width, initial-scale=1' http-equiv='refresh' content='5'/>\
+  <link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'> \
   <title>FlowerBot StatusPage</title>\
   <style>\
   body { background-color: #00ff99; font-family: Arial, Helvetica, Sans-Serif; Color: #000000; }\
     </style>\
   </head>\
-  <meta name='viewport' content='width=device-width, initial-scale=1'> \
-  <link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'> \
   <body>\
   <div class='w3-container'>\
     <h1>FlowerBot Status</h1> \
     <p>Moisture: %04d</p> \
-    <div class='w3-border'><div class='w3-grey' style='height:24px;width:%02d%%'></div></div> \
+    <div class='w3-border'><div class='w3-blue-grey' style='height:24px;width:%02d%%'></div></div> \
     <p>Time: %02d:%02d:%02d </p>  \
     <p>Check Time: %02d </p>  \
     <p>Water Level: %1d </p> \  
-  </div> \
+    </div> \
   </body> \
   </html>", moist_value, moist_value_percent, hours, minutes, seconds, checkHourTime, waterlevelflag);
   
