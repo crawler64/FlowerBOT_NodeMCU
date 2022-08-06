@@ -121,16 +121,20 @@ void handleRoot() {
   <meta http-equiv='refresh' content='5'/>\
   <title>FlowerBot StatusPage</title>\
   <style>\
-  body { background-color: #cccccc; font-family: Arial, Helvetica, Sans-Serif; Color: #000088; }\
+  body { background-color: #00ff99; font-family: Arial, Helvetica, Sans-Serif; Color: #000000; }\
     </style>\
   </head>\
+  <meta name='viewport' content='width=device-width, initial-scale=1'> \
+  <link rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css'> \
   <body>\
+  <div class='w3-container'>\
     <h1>FlowerBot Status</h1> \
     <p>Moisture: %04d</p> \
-    <p>Moisture [%%]: %03d</p> \
+    <div class='w3-border'><div class='w3-grey' style='height:24px;width:%02d%%'></div></div> \
     <p>Time: %02d:%02d:%02d </p>  \
     <p>Check Time: %02d </p>  \
     <p>Water Level: %1d </p> \  
+  </div> \
   </body> \
   </html>", moist_value, moist_value_percent, hours, minutes, seconds, checkHourTime, waterlevelflag);
   
@@ -321,7 +325,7 @@ void init_time(){
 
   // hold lib
   //sync_time();
-  bot.sendMessage(CHAT_ID, "FlowerBot started up", "");
+  //bot.sendMessage(CHAT_ID, "FlowerBot started up", "");
 }
 
 void init_webserver(){
@@ -393,10 +397,10 @@ void Pump(bool onoff)
 void checkWatering(){
       uWaterTimeCurrent = millis();
       if (hours == checkHourTime && minutes > 0 && (moist_value_percent < MOISTURE_VALUE) && !wateringFlag && (uWaterTimeCurrent - uWaterTimePrev > DELAY_TIME_WATERING) || manualwateringFlag) {
-          manualwateringFlag = false;
           wateringFlag = true;
           uWaterTimePrev = millis();
           bot.sendMessage(CHAT_ID, "FlowerBot started Watering", "");
+          manualwateringFlag = false;
           // check WaterLevel in Tank
           Pump(true);
     } else if ((uWaterTimeCurrent - uWaterTimePrev > WATERING_TIME) && wateringFlag) {
@@ -404,8 +408,8 @@ void checkWatering(){
       wateringFlag = false;
       uWaterTimePrev = uWaterTimeCurrent;
       Pump(false);
-      manualwateringFlag = false;
-      bot.sendMessage(CHAT_ID, "FlowerBot stopped Watering", "");
+      //manualwateringFlag = false;
+      //bot.sendMessage(CHAT_ID, "FlowerBot stopped Watering", "");
     }
     if (hours == checkHourTime && minutes == 0 && (abs(uWaterTimeCurrent - uWaterLevelPrev) > 61000) && !waterlevelflag)
     {
@@ -487,6 +491,7 @@ void loop() {
     }
     uWIFIPreviousTime = uCurrentTime;
     if(wifiretry > 5){
+      wifiretry = 0;
       Serial.println("\nReboot");
       ESP.restart();
     }
